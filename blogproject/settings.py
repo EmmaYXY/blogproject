@@ -55,7 +55,8 @@ ROOT_URLCONF = 'blogproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  #`BASE_DIR`是settings.py在配置开头定义的变量，记录的是工程根目录blog
+                                                        #-project\的值
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
