@@ -19,87 +19,87 @@ class IndexView(ListView):
         """
 
         # 首先获得父类生成的传递给模板的字典
-        context = super().get_context_data(**kwargs)
+		context = super().get_context_data(**kwargs)
 
         # 父类生成的字典中已有 paginator、page_boj、is_paginated 三个模板变量
-        paginator = context.get('paginator')
-        page = context.get('page_obj')
-        is_paginated = context.get('is_paginated')
+		paginator = context.get('paginator')
+		page = context.get('page_obj')
+		is_paginated = context.get('is_paginated')
 
         # 调用自己写的 pagination_data 方法获得显示分页导航条需要的数据
-        context.update(pagination_data)
+		context.update(pagination_data)
 
         # 将更新后的 context 返回，以便 ListView 使用这个字典里的模板变量去渲染模板
-        return context
+		return context
 
-    def pagination_data(self, paginator, page, is_paginated):
-    	if not is_paginated:
+	def pagination_data(self, paginator, page, is_paginated):
+		if not is_paginated:
     		# 没有分页，则不需任何分页导航条数据，返回空字典
-    		return {}
+			return {}
 
     	# 当前页左,右边连续的页码号，初始值为空
-    	left = []
-     	right = []
+		left = []
+		right = []
 
     	# 第 1 页,最后一页页码后是否需要显示省略号
-    	left_has_more = False
-    	right_has_more = False
+		left_has_more = False
+		right_has_more = False
 
     	# 是否需要显示第一页，最后一页的页码号
     	# 如果当前页左边连续页码号包含边界页面，则无需显示
-    	first = False
-    	last = False
+		first = False
+		last = False
 
     	# 获得用户当前请求页码号
-    	page_number = page.page_number
+		page_number = page.page_number
 
     	# 获得分页后总页数
-    	total_pages = paginator.num_pages
+		total_pages = paginator.num_pages
 
     	# 获得整个分页页码列表，比如分了四页，就是 [1, 2, 3, 4]
-    	page_range = paginator.page_range
+		page_range = paginator.page_range
 
-    	if page_number == 1:
+		if page_number == 1:
     		# 用户请求第一页数据，left=[]，只需要当前页右边连续页码号
     		# 比如分页页码列表是 [1, 2, 3, 4]，那么获取的就是 right = [2, 3]
     		# 也可改变数字，获取更多页码
-    		right = page_range[page_number:page_number + 2]
+			right = page_range[page_number:page_number + 2]
 
     		# 如果最右边页码号比最后一页页码号减去 1 还要小
     		# 即需要显示省略号，通过 right_has_more 来指示
-    		if right[-1] < total_pages - 1:
-    			right_has_more = True
+			if right[-1] < total_pages - 1:
+				right_has_more = True
 
     		# 如果最右边的页码号比最后一页的页码号小，说明当前页右边的连续页码号中不包含最后一页的页码
     		# 所以需要显示最后一页的页码号，通过 last 来指示
-    		if right[-1] < total_pages:
-    			last = True
+			if right[-1] < total_pages:
+				last = True
 
-    	elif page_number == total_pages:
-    		left = page_range[(page_number - 3) if (page_number -3) > 0 else 0:page_number - 1]
+		elif page_number == total_pages:
+			left = page_range[(page_number - 3) if (page_number -3) > 0 else 0:page_number - 1]
 
-    		if left[0] > 2:
-    			left_has_more = True
+			if left[0] > 2:
+				left_has_more = True
 
-    		if left[0] > 1:
-    			first = True
+			if left[0] > 1:
+				first = True
 
-    	else:
+		else:
     		# 用户请求中间页码，需要当前页左右两边的连续页码号
-    		left = page_range[(page_number - 3) if (page_number - 3) > 0 else 0:page_number - 1]
-    		right = page_range[page_number:page_number + 2]
+			left = page_range[(page_number - 3) if (page_number - 3) > 0 else 0:page_number - 1]
+			right = page_range[page_number:page_number + 2]
 
-    		if right[-1] < total_pages - 1:
-    			right_has_more = True
-    		if right[-1] < total_pages:
-    			last = True
+			if right[-1] < total_pages - 1:
+				right_has_more = True
+			if right[-1] < total_pages:
+				last = True
 
-    		if left[0] > 2:
-    			left_has_more = True
-    		if left[0] > 1:
-    			first = True
+			if left[0] > 2:
+				left_has_more = True
+			if left[0] > 1:
+				first = True
 
-    	data = {
+		data = {
     		'left': left,
     		'right': right,
     		'left_has_more': left_has_more,
@@ -107,10 +107,10 @@ class IndexView(ListView):
     		'first': first,
     		'last': last,
     	}
-    	return data
+		return data
 
 
-
+"""
 def detail(request, pk):
 	post = get_object_or_404(Post, pk=pk)
 	post.increase_views()
