@@ -198,7 +198,14 @@ class CategoryView(ListView):
 		return super(CategoryView, self).get_queryset().filter(category=cate)
 
 
-		                 
+class TagView(ListView):
+	model = Post
+	template_name = 'blog/index.html'
+	context_object_name = 'post_list'
+
+	def get_queryset(self):
+		tag =  get_object_or_404(Tag, pk=self.kwargs.get('pk'))
+		return super(TagView, self).get_queryset().filter(tags=tag)		                 
 		         
 
 

@@ -1,4 +1,4 @@
-from ..models import Post, Category
+from ..models import Post, Category, Tag
 from django import template
 
 from django.db.models.aggregates import Count # Count 计算分类下的文章数，其接受的参数为需要计数的模型的名称
@@ -20,4 +20,7 @@ def get_categories():
 	# 双下划线是查询表达式
 	return Category.objects.annotate(num_posts=Count('post')).filter(num_posts_gt=0)
 
+@register.simple_tag
+def get_tags():
+	return Tag.objects.annotate(num_posts=Count('post')).filter(num_posts__gt=0)
 
