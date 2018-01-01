@@ -4,6 +4,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#scripts
+fabfile.py
+
 
 # Distribution / packaging
 .Python
