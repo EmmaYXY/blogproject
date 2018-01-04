@@ -1,10 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from blog.models import Post, Category
+
 import markdown
+
 from django.views.generic import ListView, DetailView
+
 from django.utils.text import slugify
 from markdown.extensions.toc import TocExtension
 from django.db.models import Q
+from comments.forms import CommentForm
 
 
 class IndexView(ListView):
@@ -14,26 +18,6 @@ class IndexView(ListView):
 	# 指定 paginate_by 属性后开启分页功能，其值代表每一页包含多少篇文章
 	paginate_by = 10
 
-	def get_context_data(self, **kwargs):
-		"""
-		在试图函数中将模板变量传递给模板是通过给 render 函数的 context 参数传递一个字典实现的，
-		在类视图中，这个字典是通过 get_context_data 获得的，
-		所以覆写该方法，是以让我们额能够再插入一些自定义的模板变量进去
-        """
-
-        # 首先获得父类生成的传递给模板的字典
-		context = super().get_context_data(**kwargs)
-
-        # 父类生成的字典中已有 paginator、page_boj、is_paginated 三个模板变量
-		paginator = context.get('paginator')
-		page = context.get('page_obj')
-		is_paginated = context.get('is_paginated')
-
-        # 调用自己写的 pagination_data 方法获得显示分页导航条需要的数据
-		context.update(pagination_data)
-
-        # 将更新后的 context 返回，以便 ListView 使用这个字典里的模板变量去渲染模板
-		return context
 
 	def pagination_data(self, paginator, page, is_paginated):
 		if not is_paginated:
@@ -113,6 +97,30 @@ class IndexView(ListView):
 		return data
 
 
+	def get_context_data(self, **kwargs):
+		"""
+		在试图函数中将模板变量传递给模板是通过给 render 函数的 context 参数传递一个字典实现的，
+		在类视图中，这个字典是通过 get_context_data 获得的，
+		所以覆写该方法，是以让我们额能够再插入一些自定义的模板变量进去
+        """
+
+        # 首先获得父类生成的传递给模板的字典
+		context = super().get_context_data(**kwargs)
+
+        # 父类生成的字典中已有 paginator、page_boj、is_paginated 三个模板变量
+		paginator = context.get('paginator')
+		page = context.get('page_obj')
+		is_paginated = context.get('is_paginated')
+
+		# 调用自己写的 pagination_data 方法获得显示分页导航条需要的数据
+		pagination_data = self.pagination_data(paginator, page, is_paginated)
+
+		# 将分页导航条的模板变量更新到 context 中，注意 pagination_data 方法返回的也是一个字典
+		context.update(pagination_data)
+
+        # 将更新后的 context 返回，以便 ListView 使用这个字典里的模板变量去渲染模板
+		return context
+
 """
 def detail(request, pk):
 	post = get_object_or_404(Post, pk=pk)
@@ -152,6 +160,7 @@ class PostDetailView(DetailView):
 
 	def get_object(self, queryset=None):
 		#覆写 get_object 方法的目的是因为需要对 post 的 body 值进行渲染
+		post = super(PostDetailView, self).get_object(queryset=None)
 		md = markdown.Markdown(extensions=['markdown.extensions.extra',
 								           'markdown.extensions.codehilite',
 								           TocExtension(slugify=slugify),

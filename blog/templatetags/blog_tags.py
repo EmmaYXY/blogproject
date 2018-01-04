@@ -18,7 +18,7 @@ def archives():
 @register.simple_tag
 def get_categories():
 	# 双下划线是查询表达式
-	return Category.objects.annotate(num_posts=Count('post')).filter(num_posts_gt=0)
+	return Category.objects.annotate(num_posts=Count('post')).filter(num_posts__gt=0)
 
 @register.simple_tag
 def get_tags():
