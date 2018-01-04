@@ -6,6 +6,9 @@ __pycache__/
 
 #scripts
 fabfile.py
+blog/migrations/0002_auto_20180101_1005.py
+blogproject/__pycache__settings.cpython-36.pyc
+
 
 
 # Distribution / packaging
