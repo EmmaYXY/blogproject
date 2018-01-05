@@ -25,7 +25,7 @@ SECRET_KEY = '1@!3rv1ex*_^ts9z*yrj^#3-6rsw(!%@i_0_&!9xkm(!wz%9k2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.emmayxy.store']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.maetex.xyz']
 
 
 # Application definition
